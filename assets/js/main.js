@@ -103,22 +103,136 @@ document.addEventListener('DOMContentLoaded', () => {
     initPlantForm();
 });
 
-function initPlantForm() {
-    const plantForm = document.getElementById('plant-form');
-    if (plantForm) {
-        plantForm.addEventListener('submit', function(e) {
-            // TODO: Remove preventDefault when connecting to PHP
-            e.preventDefault();
-            showToast('Plant saved successfully!');
-            const modal = this.closest('.modal-overlay');
-            if (modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
+/**
+ * Tab functionality for admin dashboard
+ */
+function switchTab(tabId) {
+    const tabBtns = document.querySelectorAll('.admin-tabs .tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabBtns.forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.borderBottomColor = 'transparent';
+    });
+    tabContents.forEach(content => {
+        content.classList.remove('active');
+        content.style.display = 'none';
+    });
+    
+    const activeBtn = Array.from(tabBtns).find(btn => btn.getAttribute('onclick').includes(tabId));
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.style.borderBottomColor = 'var(--color-primary)';
+    }
+    
+    const activeTab = document.getElementById(tabId + '-tab');
+    if (activeTab) {
+        activeTab.classList.add('active');
+        activeTab.style.display = 'block';
     }
 }
 
+/**
+ * Validates and submits the Plant form
+ */
+function submitPlantForm(e) {
+    e.preventDefault();
+    let isValid = true;
+
+    // Common Name Validation
+    const commonName = document.getElementById('common-name');
+    const commonNameErr = document.getElementById('common-name-error');
+    if (commonName.value.trim().length < 2) {
+        commonNameErr.innerText = 'Common name must be at least 2 characters.';
+        commonNameErr.style.display = 'block';
+        isValid = false;
+    } else {
+        commonNameErr.style.display = 'none';
+    }
+
+    // Botanical Name Validation
+    const botanicalName = document.getElementById('botanical-name');
+    const botanicalNameErr = document.getElementById('botanical-name-error');
+    if (botanicalName.value.trim().length < 2) {
+        botanicalNameErr.innerText = 'Botanical name must be at least 2 characters.';
+        botanicalNameErr.style.display = 'block';
+        isValid = false;
+    } else {
+        botanicalNameErr.style.display = 'none';
+    }
+
+    // Image Validation (Optional, but if present max 2MB)
+    const plantImage = document.getElementById('plant-image');
+    const plantImageErr = document.getElementById('plant-image-error');
+    if (plantImage.files.length > 0) {
+        const file = plantImage.files[0];
+        if (!file.type.startsWith('image/')) {
+            plantImageErr.innerText = 'Please upload a valid image file.';
+            plantImageErr.style.display = 'block';
+            isValid = false;
+        } else if (file.size > 2 * 1024 * 1024) { // 2MB
+            plantImageErr.innerText = 'Image size must be less than 2MB.';
+            plantImageErr.style.display = 'block';
+            isValid = false;
+        } else {
+            plantImageErr.style.display = 'none';
+        }
+    } else {
+        if (plantImageErr) plantImageErr.style.display = 'none';
+    }
+
+    if (isValid) {
+        showToast('Plant saved successfully!');
+        const modal = document.getElementById('add-plant-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('plant-form').reset();
+        const preview = document.querySelector('.image-preview');
+        const uploadText = document.querySelector('.upload-text');
+        if (preview) preview.style.display = 'none';
+        if (uploadText) uploadText.style.display = 'block';
+    }
+}
+
+function submitCategoryForm(e) {
+    e.preventDefault();
+    const nameInput = document.getElementById('category-name');
+    const errorMsg = nameInput.nextElementSibling;
+    if (nameInput.value.trim() === '') {
+        errorMsg.innerText = 'Family name is required.';
+        errorMsg.style.display = 'block';
+    } else {
+        errorMsg.style.display = 'none';
+        showToast('Category saved successfully!');
+        const modal = document.getElementById('add-category-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('add-category-form').reset();
+    }
+}
+
+function submitCompoundForm(e) {
+    e.preventDefault();
+    const nameInput = document.getElementById('compound-name');
+    const errorMsg = nameInput.nextElementSibling;
+    if (nameInput.value.trim() === '') {
+        errorMsg.innerText = 'Compound name is required.';
+        errorMsg.style.display = 'block';
+    } else {
+        errorMsg.style.display = 'none';
+        showToast('Compound saved successfully!');
+        const modal = document.getElementById('add-compound-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('add-compound-form').reset();
+    }
+}
 /**
  * Initialize login form validation
  */

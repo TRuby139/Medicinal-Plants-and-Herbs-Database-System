@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Botanica</title>
+    <link rel="stylesheet" href="assets/css/index.css">
+    <style>
+        .about-hero {
+            background: linear-gradient(rgba(10, 31, 22, 0.7), rgba(10, 31, 22, 0.7)), url('assets/images/herbal2.jpg') center/cover no-repeat;
+            padding: 100px 20px;
+            color: #FAF9F6;
+            text-align: center;
+        }
+        .about-hero h1 {
+            color: #FAF9F6;
+        }
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            line-height: 1.8;
+        }
+        .about-content h2 {
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        .about-content p {
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        .project-details {
+            background-color: var(--color-surface);
+            padding: 30px;
+            border-radius: var(--radius);
+            border: 1px solid var(--color-divider);
+            margin-top: 40px;
+        }
+        .project-details h3 {
+            color: var(--color-accent);
+            margin-bottom: 15px;
+        }
+        .project-details ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .project-details li {
+            margin-bottom: 10px;
+            padding-left: 24px;
+            position: relative;
+        }
+        .project-details li::before {
+            content: '🌿';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container flex justify-between items-center flex-wrap">
+            <div class="logo">
+                <a href="index.html">Botanica</a>
+            </div>
+            <nav class="main-nav" id="mobile-nav">
+                <ul class="flex gap-8 items-center">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html" class="active-link">About</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions flex items-center gap-4">
+                <a href="login.html" class="btn btn-primary">Admin Login</a>
+                <button class="mobile-menu-btn" onclick="toggleMobileNav()">Menu</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="about-hero">
+            <div class="container">
+                <h1>About Botanica</h1>
+                <p style="font-size: 1.2rem; max-width: 600px; margin: 20px auto 0;">A digital apothecary bridging ancient botanical wisdom with modern web technology.</p>
+            </div>
+        </section>
+
+        <section class="about-content container">
+            <h2>Our Purpose</h2>
+            <p>
+                Welcome to Botanica, a comprehensive digital catalogue dedicated to medicinal plants and herbs. 
+                Our platform allows users to explore a rich database of nature's remedies, complete with detailed plant profiles, 
+                medicinal uses, active chemical compounds, and preparation methods. 
+                Whether you are a researcher, a student, or a natural health enthusiast, Botanica provides a structured, 
+                easy-to-navigate interface to discover the botanical world.
+            </p>
+
+            <h2>Why We Created This Website</h2>
+            <p>
+                Botanica was developed as a group project for the <strong>TWT2231 – Web Techniques and Applications</strong> course. 
+                Our objective was to design and implement a fully functional Medicinal Plants and Herbs Database System 
+                that applies core web technologies including HTML5, CSS3, JavaScript, PHP, and MySQL.
+            </p>
+            
+            <div class="project-details">
+                <h3>Project Scope & Features</h3>
+                <p style="margin-bottom: 15px; font-size: 1rem;">This academic project features two main modules built with fundamental web techniques:</p>
+                <ul>
+                    <li><strong>Public Guest Module:</strong> A user-friendly interface allowing anyone to browse, search (by common or botanical name), and filter plants by family or medicinal uses without registration.</li>
+                    <li><strong>Detailed Plant Profiles:</strong> Comprehensive pages displaying habitat origins, dosages, and safety precautions.</li>
+                    <li><strong>Administrator Module:</strong> A secure, session-managed backend for administrators to perform full CRUD (Create, Read, Update, Delete) operations on the plant inventory, complete with image uploads.</li>
+                    <li><strong>Security Focus:</strong> Implementation of secure, parameterized MySQL queries and dual-layer (client & server) form validation.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>&copy; 2026 Medicinal Plants and Herbs Database System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
