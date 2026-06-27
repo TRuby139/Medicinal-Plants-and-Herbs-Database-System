@@ -1,6 +1,4 @@
-/* 
- * Global Design System for Medicinal Plants and Herbs Database System 
- */
+/* Global Design System for Medicinal Plants and Herbs Database System */
 
 /* Import Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
@@ -115,32 +113,32 @@ img {
     text-decoration: none;
 }
 
-.btn-primary {
+.btn.btn-primary {
     background-color: var(--color-primary);
     color: #FAF9F6;
 }
 
-.btn-primary:hover {
+.btn.btn-primary:hover {
     background-color: #2a4c39;
     color: #FAF9F6;
 }
 
-.btn-accent {
+.btn.btn-accent {
     background-color: var(--color-accent);
     color: #FAF9F6;
 }
 
-.btn-accent:hover {
+.btn.btn-accent:hover {
     background-color: #9c5921;
     color: #FAF9F6;
 }
 
-.btn-outline {
+.btn.btn-outline {
     border-color: var(--color-primary);
     color: var(--color-primary);
 }
 
-.btn-outline:hover {
+.btn.btn-outline:hover {
     background-color: var(--color-primary);
     color: #FAF9F6;
 }
