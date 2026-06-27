@@ -8,18 +8,20 @@
 </head>
 <body>
     <header class="site-header">
-        <div class="container flex justify-between items-center">
+        <div class="container flex justify-between items-center flex-wrap">
             <div class="logo">
                 <a href="index.html">Botanica</a>
             </div>
             <nav class="main-nav" id="mobile-nav">
-                <ul class="flex gap-4 items-center">
-                    <li><a href="index.html">Catalogue</a></li>
+                <ul class="flex gap-8 items-center">
+                    <li><a href="index.html" class="active-link">Home</a></li>
                     <li><a href="#">About</a></li>
-                    <li><a href="login.html" class="btn btn-primary">Admin Login</a></li>
                 </ul>
             </nav>
-            <button class="mobile-menu-btn" onclick="toggleMobileNav()">Menu</button>
+            <div class="header-actions flex items-center gap-4">
+                <a href="login.html" class="btn btn-primary">Admin Login</a>
+                <button class="mobile-menu-btn" onclick="toggleMobileNav()">Menu</button>
+            </div>
         </div>
     </header>
 

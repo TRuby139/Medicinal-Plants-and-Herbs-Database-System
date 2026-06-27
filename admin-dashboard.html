@@ -9,25 +9,37 @@
 </head>
 <body>
     <header class="site-header">
-        <div class="container flex justify-between items-center">
+        <div class="container flex justify-between items-center flex-wrap">
             <div class="logo">
                 <a href="admin-dashboard.html">Admin Dashboard</a>
             </div>
-            <button class="mobile-menu-btn" onclick="toggleMobileNav()">☰</button>
-            <nav id="mobile-nav" class="main-nav">
-                <ul class="flex gap-4 items-center">
-                    <li><a href="admin-dashboard.html">Plants</a></li>
+            <nav class="main-nav" id="mobile-nav">
+                <ul class="flex gap-8 items-center">
+                    <li><a href="admin-dashboard.html" class="active-link">Dashboard</a></li>
                     <li><a href="index.html">View Public Site</a></li>
-                    <li><a href="login.html" class="btn btn-outline">Logout</a></li>
                 </ul>
             </nav>
+            <div class="header-actions flex items-center gap-4">
+                <a href="login.html" class="btn btn-outline">Logout</a>
+                <button class="mobile-menu-btn" onclick="toggleMobileNav()">Menu</button>
+            </div>
         </div>
     </header>
 
     <main class="container" style="padding: 40px 20px;">
-        <div class="admin-header">
-            <h2>Plant Inventory</h2>
+        <div class="admin-header flex justify-between items-center" style="margin-bottom: 20px;">
+            <h2>Dashboard</h2>
             <button class="btn btn-primary" data-modal-target="add-plant-modal">Add New Plant</button>
+        </div>
+
+        <div class="admin-toolbar flex gap-4" style="margin-bottom: 20px; flex-wrap: wrap;">
+            <input type="text" placeholder="Search inventory..." style="flex: 1; min-width: 200px; padding: 10px; border-radius: var(--radius); border: 1px solid var(--color-divider);">
+            <select style="width: auto; padding: 10px; border-radius: var(--radius); border: 1px solid var(--color-divider);">
+                <option value="">All Statuses</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+            </select>
+            <button class="btn btn-outline">Filter</button>
         </div>
 
         <div class="table-container">
