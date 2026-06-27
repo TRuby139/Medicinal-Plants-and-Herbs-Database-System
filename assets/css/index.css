@@ -399,11 +399,12 @@ img {
 .detail-split-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    min-height: calc(100vh - 80px);
+    height: calc(100vh - 80px);
 }
 @media (max-width: 900px) {
     .detail-split-layout {
         grid-template-columns: 1fr;
+        height: auto;
     }
 }
 .detail-image-side {
