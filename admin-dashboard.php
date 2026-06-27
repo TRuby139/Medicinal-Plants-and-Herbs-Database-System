@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,16 +18,16 @@
     <header class="site-header">
         <div class="container flex justify-between items-center flex-wrap">
             <div class="logo">
-                <a href="admin-dashboard.html">Admin Dashboard</a>
+                <a href="admin-dashboard.php">Admin Dashboard</a>
             </div>
             <nav class="main-nav" id="mobile-nav">
                 <ul class="flex gap-8 items-center">
-                    <li><a href="admin-dashboard.html" class="active-link">Dashboard</a></li>
-                    <li><a href="index.html">View Public Site</a></li>
+                    <li><a href="admin-dashboard.php" class="active-link">Dashboard</a></li>
+                    <li><a href="index.php">View Public Site</a></li>
                 </ul>
             </nav>
             <div class="header-actions flex items-center gap-4">
-                <a href="login.html" class="btn btn-outline">Logout</a>
+                <a href="#" onclick="logout(event)" class="btn btn-outline">Logout</a>
                 <button class="mobile-menu-btn" onclick="toggleMobileNav()">Menu</button>
             </div>
         </div>
@@ -307,5 +314,20 @@
     <div id="toast-container" class="toast-container"></div>
 
     <script src="assets/js/main.js"></script>
+    <script>
+        function logout(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('action', 'logout');
+            fetch('api/auth.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                window.location.href = 'login.php';
+            });
+        }
+    </script>
 </body>
 </html>

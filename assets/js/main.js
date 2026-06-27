@@ -3,9 +3,76 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialization code can go here if needed.
     initTabs();
+    
+    // If we are on the public catalogue page
+    if (document.getElementById('plant-grid-container')) {
+        fetchPlants();
+        
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    fetchPlants(e.target.value);
+                }
+            });
+            const searchBtn = searchInput.nextElementSibling;
+            if (searchBtn && searchBtn.tagName === 'BUTTON') {
+                searchBtn.addEventListener('click', () => {
+                    fetchPlants(searchInput.value);
+                });
+            }
+        }
+    }
 });
+
+function fetchPlants(search = '') {
+    const container = document.getElementById('plant-grid-container');
+    if (!container) return;
+    
+    container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><p>Loading catalogue...</p></div>';
+    
+    let url = 'api/plants.php?action=get_plants';
+    if (search) {
+        url += '&search=' + encodeURIComponent(search);
+    }
+    
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                container.innerHTML = '';
+                if (data.data.length === 0) {
+                    container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><p>No plants found.</p></div>';
+                    return;
+                }
+                
+                data.data.forEach(plant => {
+                    const card = document.createElement('div');
+                    card.className = 'plant-card';
+                    
+                    const imgPath = plant.image_path ? plant.image_path : 'assets/images/Not_uploaded.png';
+                    
+                    card.innerHTML = `
+                        <div class="card-image">
+                            <img src="${imgPath}" alt="${plant.common_name}">
+                        </div>
+                        <div class="card-content">
+                            <h4 class="botanical-name">${plant.botanical_name}</h4>
+                            <h3 class="common-name">${plant.common_name}</h3>
+                            <a href="plant-detail.php?id=${plant.id}" class="btn btn-outline btn-full" style="margin-top: 15px;">View Profile</a>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } else {
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><p>Error loading catalogue.</p></div>';
+            }
+        })
+        .catch(err => {
+            container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><p>Error loading catalogue.</p></div>';
+        });
+}
 
 /**
  * Tab functionality for plant details page

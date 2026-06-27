@@ -10,16 +10,16 @@
     <header class="site-header">
         <div class="container flex justify-between items-center flex-wrap">
             <div class="logo">
-                <a href="index.html">Botanica</a>
+                <a href="index.php">Botanica</a>
             </div>
             <nav class="main-nav" id="mobile-nav">
                 <ul class="flex gap-8 items-center">
-                    <li><a href="index.html" class="active-link">Home</a></li>
-                    <li><a href="about.html">About</a></li>
+                    <li><a href="index.php" class="active-link">Home</a></li>
+                    <li><a href="about.php">About</a></li>
                 </ul>
             </nav>
             <div class="header-actions flex items-center gap-4">
-                <a href="login.html" class="btn btn-primary">Admin Login</a>
+                <a href="login.php" class="btn btn-primary">Admin Login</a>
                 <button class="mobile-menu-btn" onclick="toggleMobileNav()">Menu</button>
             </div>
         </div>
@@ -76,69 +76,17 @@
                 </aside>
 
                 <div class="main-content">
-                    <div class="plant-grid">
-                        <!-- Plant Card 1 -->
-                        <div class="plant-card">
-                            <div class="card-image">
-                                <img src="https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Peppermint Plant">
-                            </div>
-                            <div class="card-content">
-                                <h4 class="botanical-name">Mentha &times; piperita</h4>
-                                <h3 class="common-name">Peppermint</h3>
-                                <p class="family">Lamiaceae</p>
-                                <a href="plant-detail.html" class="btn btn-outline btn-full">View Profile</a>
-                            </div>
-                        </div>
-
-                        <!-- Plant Card 2 -->
-                        <div class="plant-card">
-                            <div class="card-image">
-                                <img src="https://images.unsplash.com/photo-1596649718428-c1780f2d93e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Lavender">
-                            </div>
-                            <div class="card-content">
-                                <h4 class="botanical-name">Lavandula angustifolia</h4>
-                                <h3 class="common-name">Lavender</h3>
-                                <p class="family">Lamiaceae</p>
-                                <a href="plant-detail.html" class="btn btn-outline btn-full">View Profile</a>
-                            </div>
-                        </div>
-
-                        <!-- Plant Card 3 -->
-                        <div class="plant-card">
-                            <div class="card-image">
-                                <img src="https://images.unsplash.com/photo-1615486511484-92e172054368?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Echinacea">
-                            </div>
-                            <div class="card-content">
-                                <h4 class="botanical-name">Echinacea purpurea</h4>
-                                <h3 class="common-name">Purple Coneflower</h3>
-                                <p class="family">Asteraceae</p>
-                                <a href="plant-detail.html" class="btn btn-outline btn-full">View Profile</a>
-                            </div>
-                        </div>
-                        
-                        <!-- Plant Card 4 -->
-                        <div class="plant-card">
-                            <div class="card-image">
-                                <img src="assets/images/Not_uploaded.png" alt="Turmeric">
-                            </div>
-                            <div class="card-content">
-                                <h4 class="botanical-name">Curcuma longa</h4>
-                                <h3 class="common-name">Turmeric</h3>
-                                <p class="family">Zingiberaceae</p>
-                                <a href="plant-detail.html" class="btn btn-outline btn-full">View Profile</a>
-                            </div>
+                    <div class="plant-grid" id="plant-grid-container">
+                        <!-- Plant cards will be loaded here via JavaScript fetch -->
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                            <p>Loading catalogue...</p>
                         </div>
                     </div>
                     
                     <!-- Pagination (Displays when results > 6) -->
-                    <div class="pagination flex justify-center items-center gap-2">
+                    <div class="pagination flex justify-center items-center gap-2" id="pagination-container" style="display: none;">
                         <button class="page-btn" disabled>&laquo;</button>
                         <button class="page-btn active">1</button>
-                        <button class="page-btn">2</button>
-                        <button class="page-btn">3</button>
-                        <button class="page-btn">4</button>
-                        <span class="page-dots">...</span>
-                        <button class="page-btn">10</button>
                         <button class="page-btn">&raquo;</button>
                     </div>
                 </div>

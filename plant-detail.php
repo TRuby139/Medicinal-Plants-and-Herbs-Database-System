@@ -10,16 +10,16 @@
     <header class="site-header">
         <div class="container flex justify-between items-center flex-wrap">
             <div class="logo">
-                <a href="index.html">Botanica</a>
+                <a href="index.php">Botanica</a>
             </div>
             <nav class="main-nav" id="mobile-nav">
                 <ul class="flex gap-8 items-center">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
+                    <li><a href="index.php">Home</a></li>
+                    <li><a href="about.php">About</a></li>
                 </ul>
             </nav>
             <div class="header-actions flex items-center gap-4">
-                <a href="login.html" class="btn btn-primary">Admin Login</a>
+                <a href="login.php" class="btn btn-primary">Admin Login</a>
                 <button class="mobile-menu-btn" onclick="toggleMobileNav()">Menu</button>
             </div>
         </div>
@@ -34,7 +34,7 @@
 
             <!-- Right Side: Content -->
             <div class="detail-content-side">
-                <a href="index.html" class="back-link">&larr; Back to Catalogue</a>
+                <a href="index.php" class="back-link">&larr; Back to Catalogue</a>
                 
                 <div class="plant-header">
                     <h1 class="botanical-name-large">Mentha &times; piperita</h1>

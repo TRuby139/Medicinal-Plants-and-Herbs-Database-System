@@ -63,16 +63,16 @@
     <header class="site-header">
         <div class="container flex justify-between items-center flex-wrap">
             <div class="logo">
-                <a href="index.html">Botanica</a>
+                <a href="index.php">Botanica</a>
             </div>
             <nav class="main-nav" id="mobile-nav">
                 <ul class="flex gap-8 items-center">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html" class="active-link">About</a></li>
+                    <li><a href="index.php">Home</a></li>
+                    <li><a href="about.php" class="active-link">About</a></li>
                 </ul>
             </nav>
             <div class="header-actions flex items-center gap-4">
-                <a href="login.html" class="btn btn-primary">Admin Login</a>
+                <a href="login.php" class="btn btn-primary">Admin Login</a>
                 <button class="mobile-menu-btn" onclick="toggleMobileNav()">Menu</button>
             </div>
         </div>
