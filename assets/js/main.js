@@ -4,7 +4,37 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialization code can go here if needed.
+    initTabs();
 });
+
+/**
+ * Tab functionality for plant details page
+ */
+function initTabs() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    if (tabBtns.length === 0) return;
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all buttons and panes
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+
+            // Add active class to clicked button
+            btn.classList.add('active');
+
+            // Find corresponding pane and make it active
+            const targetId = btn.getAttribute('data-tab');
+            const targetPane = document.getElementById(targetId);
+            
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+        });
+    });
+}
 
 /**
  * Toggles the mobile navigation menu.

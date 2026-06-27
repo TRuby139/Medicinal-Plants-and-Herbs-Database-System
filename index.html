@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue - Medicinal Plants and Herbs</title>
+    <link rel="stylesheet" href="assets/css/index.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container flex justify-between items-center">
+            <div class="logo">
+                <a href="index.html">Botanica</a>
+            </div>
+            <nav class="main-nav" id="mobile-nav">
+                <ul class="flex gap-4">
+                    <li><a href="index.html">Catalogue</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Login</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileNav()">Menu</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero flex items-center justify-center flex-col">
+            <div class="hero-content text-center">
+                <h1>Medicinal Plants & Herbs</h1>
+                <p>Discover nature's remedies through our comprehensive apothecary database.</p>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search by common or botanical name..." id="searchInput">
+                    <button class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="catalogue-section container">
+            <div class="layout-grid">
+                <aside class="sidebar">
+                    <h3>Filters</h3>
+                    
+                    <details class="filter-group" open>
+                        <summary>Plant Family</summary>
+                        <ul class="filter-list">
+                            <li><label><input type="checkbox"> Lamiaceae</label></li>
+                            <li><label><input type="checkbox"> Asteraceae</label></li>
+                            <li><label><input type="checkbox"> Zingiberaceae</label></li>
+                        </ul>
+                    </details>
+                    
+                    <hr class="divider">
+                    
+                    <details class="filter-group" open>
+                        <summary>Medicinal Use</summary>
+                        <ul class="filter-list">
+                            <li><label><input type="checkbox"> Digestive</label></li>
+                            <li><label><input type="checkbox"> Anti-inflammatory</label></li>
+                            <li><label><input type="checkbox"> Respiratory</label></li>
+                            <li><label><input type="checkbox"> Sedative</label></li>
+                        </ul>
+                    </details>
+
+                    <hr class="divider">
+                    
+                    <details class="filter-group" open>
+                        <summary>Compounds</summary>
+                        <ul class="filter-list">
+                            <li><label><input type="checkbox"> Menthol</label></li>
+                            <li><label><input type="checkbox"> Curcumin</label></li>
+                            <li><label><input type="checkbox"> Rosmarinic Acid</label></li>
+                        </ul>
+                    </details>
+                </aside>
+
+                <div class="main-content">
+                    <div class="plant-grid">
+                        <!-- Plant Card 1 -->
+                        <div class="plant-card">
+                            <div class="card-image">
+                                <img src="https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Peppermint Plant">
+                            </div>
+                            <div class="card-content">
+                                <h4 class="botanical-name">Mentha &times; piperita</h4>
+                                <h3 class="common-name">Peppermint</h3>
+                                <p class="family">Lamiaceae</p>
+                                <a href="plant-detail.html" class="btn btn-outline btn-full">View Profile</a>
+                            </div>
+                        </div>
+
+                        <!-- Plant Card 2 -->
+                        <div class="plant-card">
+                            <div class="card-image">
+                                <img src="https://images.unsplash.com/photo-1596649718428-c1780f2d93e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Lavender">
+                            </div>
+                            <div class="card-content">
+                                <h4 class="botanical-name">Lavandula angustifolia</h4>
+                                <h3 class="common-name">Lavender</h3>
+                                <p class="family">Lamiaceae</p>
+                                <a href="plant-detail.html" class="btn btn-outline btn-full">View Profile</a>
+                            </div>
+                        </div>
+
+                        <!-- Plant Card 3 -->
+                        <div class="plant-card">
+                            <div class="card-image">
+                                <img src="https://images.unsplash.com/photo-1615486511484-92e172054368?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Echinacea">
+                            </div>
+                            <div class="card-content">
+                                <h4 class="botanical-name">Echinacea purpurea</h4>
+                                <h3 class="common-name">Purple Coneflower</h3>
+                                <p class="family">Asteraceae</p>
+                                <a href="plant-detail.html" class="btn btn-outline btn-full">View Profile</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Plant Card 4 -->
+                        <div class="plant-card">
+                            <div class="card-image">
+                                <img src="https://images.unsplash.com/photo-1611078810238-00565de9e01f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Turmeric">
+                            </div>
+                            <div class="card-content">
+                                <h4 class="botanical-name">Curcuma longa</h4>
+                                <h3 class="common-name">Turmeric</h3>
+                                <p class="family">Zingiberaceae</p>
+                                <a href="plant-detail.html" class="btn btn-outline btn-full">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>&copy; 2026 Medicinal Plants and Herbs Database System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
