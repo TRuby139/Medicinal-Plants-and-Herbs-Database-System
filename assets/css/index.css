@@ -215,6 +215,28 @@ img {
     border: none;
     cursor: pointer;
     font-family: var(--font-body);
+    font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .site-header .container {
+        flex-wrap: wrap;
+    }
+    .mobile-menu-btn {
+        display: block;
+    }
+    .main-nav {
+        display: none;
+        width: 100%;
+        margin-top: 15px;
+    }
+    .main-nav.active {
+        display: block;
+    }
+    .main-nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
 }
 
 /* Hero Section */

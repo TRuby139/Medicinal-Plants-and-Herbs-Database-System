@@ -107,6 +107,7 @@ function initPlantForm() {
     const plantForm = document.getElementById('plant-form');
     if (plantForm) {
         plantForm.addEventListener('submit', function(e) {
+            // TODO: Remove preventDefault when connecting to PHP
             e.preventDefault();
             showToast('Plant saved successfully!');
             const modal = this.closest('.modal-overlay');
@@ -126,8 +127,6 @@ function initLoginForm() {
     if (!loginForm) return;
 
     loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
         let hasError = false;
         const inputs = loginForm.querySelectorAll('input[required]');
         
@@ -142,12 +141,15 @@ function initLoginForm() {
         });
         
         if (hasError) {
+            e.preventDefault();
             // Trigger shake animation
             const loginCard = loginForm.closest('.login-card') || loginForm;
             loginCard.classList.remove('shake');
             void loginCard.offsetWidth; // trigger reflow
             loginCard.classList.add('shake');
         } else {
+            // TODO: Remove preventDefault when connecting to PHP
+            e.preventDefault();
             // Proceed with login (simulate success for frontend phase)
             window.location.href = 'admin-dashboard.html';
         }
