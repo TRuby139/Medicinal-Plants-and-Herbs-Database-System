@@ -189,13 +189,7 @@ if (!isset($_SESSION['admin_id'])) {
                             <label for="family">Family</label>
                             <input type="text" id="family" name="family">
                         </div>
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                            <select id="status" name="status">
-                                <option value="published">Published</option>
-                                <option value="draft">Draft</option>
-                            </select>
-                        </div>
+                            <!-- Status removed -->
                     </div>
 
                     <div class="form-group">
@@ -220,8 +214,13 @@ if (!isset($_SESSION['admin_id'])) {
                     </div>
 
                     <div class="form-group">
-                        <label for="preparation">Preparation Methods & Dosages</label>
+                        <label for="preparation">Preparation Methods</label>
                         <textarea id="preparation" name="preparation" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dosages">Dosages</label>
+                        <textarea id="dosages" name="dosages" rows="3"></textarea>
                     </div>
 
                     <div class="form-group">
@@ -237,7 +236,7 @@ if (!isset($_SESSION['admin_id'])) {
                                 <p>Drag and drop an image here or click to select</p>
                                 <p style="font-size: 0.85rem; color: var(--color-text-light);">(Max size: 2MB)</p>
                             </div>
-                            <!-- Image preview will be injected here by JS -->
+                            <img class="image-preview" src="" alt="Preview" style="display: none; max-width: 100%; max-height: 200px; margin-top: 10px; border-radius: 4px;">
                         </div>
                         <span class="error-msg" id="plant-image-error" style="color: red; font-size: 0.85rem; display: none;"></span>
                     </div>

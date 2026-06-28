@@ -42,6 +42,32 @@ document.addEventListener('DOMContentLoaded', () => {
         if (adminSearchBtn) {
             adminSearchBtn.addEventListener('click', () => loadAdminPlants());
         }
+        
+        const plantImageInput = document.getElementById('plant-image');
+        if (plantImageInput) {
+            plantImageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const preview = document.querySelector('.image-preview');
+                const uploadText = document.querySelector('.upload-text');
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (preview) {
+                            preview.src = e.target.result;
+                            preview.style.display = 'block';
+                        }
+                        if (uploadText) uploadText.style.display = 'none';
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    if (preview) {
+                        preview.style.display = 'none';
+                        preview.src = '';
+                    }
+                    if (uploadText) uploadText.style.display = 'block';
+                }
+            });
+        }
     }
 });
 
@@ -418,6 +444,8 @@ function editPlant(id) {
                 document.getElementById('habitat').value = plant.habitat || '';
                 document.getElementById('description').value = plant.description || '';
                 document.getElementById('preparation').value = plant.preparation_methods || '';
+                const dosagesEl = document.getElementById('dosages');
+                if(dosagesEl) dosagesEl.value = plant.dosages || '';
                 document.getElementById('precautions').value = plant.precautions || '';
                 
                 const previewImg = document.querySelector('.image-preview');
