@@ -7,6 +7,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // Helper functions for tags
 function getOrInsertCategory($conn, $name, $type) {
+    $name = ucfirst(strtolower(trim($name, " \t\n\r\0\x0B.")));
     $stmt = mysqli_prepare($conn, "SELECT id FROM categories WHERE name = ? AND type = ?");
     mysqli_stmt_bind_param($stmt, "ss", $name, $type);
     mysqli_stmt_execute($stmt);
@@ -19,6 +20,7 @@ function getOrInsertCategory($conn, $name, $type) {
     return mysqli_insert_id($conn);
 }
 function getOrInsertCompound($conn, $name) {
+    $name = ucfirst(strtolower(trim($name, " \t\n\r\0\x0B.")));
     $stmt = mysqli_prepare($conn, "SELECT id FROM compounds WHERE name = ?");
     mysqli_stmt_bind_param($stmt, "s", $name);
     mysqli_stmt_execute($stmt);

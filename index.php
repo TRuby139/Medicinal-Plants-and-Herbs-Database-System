@@ -39,30 +39,26 @@
 
         <section class="catalogue-section container">
             <div class="layout-grid">
-                <aside class="sidebar">
+                <aside class="sidebar" style="display: flex; flex-direction: column; gap: 15px;">
                     <h3>Filters</h3>
                     
-                    <details class="filter-group" open>
-                        <summary>Plant Family</summary>
-                        <ul class="filter-list" id="filter-family-list">
+                    <details class="filter-group">
+                        <summary class="btn btn-primary" style="width: 100%; text-align: left; border-radius: 4px; box-sizing: border-box; margin-bottom: 0;">Plant Family</summary>
+                        <ul class="filter-list" id="filter-family-list" style="margin-top: 10px;">
                             <li><small>Loading...</small></li>
                         </ul>
                     </details>
                     
-                    <hr class="divider">
-                    
-                    <details class="filter-group" open>
-                        <summary>Medicinal Use</summary>
-                        <ul class="filter-list" id="filter-uses-list">
+                    <details class="filter-group">
+                        <summary class="btn btn-outline" style="width: 100%; text-align: left; border-radius: 4px; box-sizing: border-box; margin-bottom: 0;">Medicinal Use</summary>
+                        <ul class="filter-list" id="filter-uses-list" style="margin-top: 10px;">
                             <li><small>Loading...</small></li>
                         </ul>
                     </details>
 
-                    <hr class="divider">
-                    
-                    <details class="filter-group" open>
-                        <summary>Compounds</summary>
-                        <ul class="filter-list" id="filter-compounds-list">
+                    <details class="filter-group">
+                        <summary class="btn btn-primary" style="width: 100%; text-align: left; border-radius: 4px; box-sizing: border-box; margin-bottom: 0;">Compounds</summary>
+                        <ul class="filter-list" id="filter-compounds-list" style="margin-top: 10px;">
                             <li><small>Loading...</small></li>
                         </ul>
                     </details>

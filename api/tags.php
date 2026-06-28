@@ -52,7 +52,8 @@ if ($method === 'POST') {
     }
 
     if ($action === 'add_category') {
-        $name = trim($_POST['name'] ?? '');
+        $raw_name = $_POST['name'] ?? '';
+        $name = ucfirst(strtolower(trim($raw_name, " \t\n\r\0\x0B.")));
         $type = trim($_POST['type'] ?? 'family'); // 'family' or 'medicinal_use'
         
         if (empty($name)) {
@@ -72,7 +73,9 @@ if ($method === 'POST') {
     }
     
     if ($action === 'add_compound') {
-        $name = trim($_POST['name'] ?? '');
+        $raw_name = $_POST['name'] ?? '';
+        $name = ucfirst(strtolower(trim($raw_name, " \t\n\r\0\x0B.")));
+        
         if (empty($name)) {
             echo json_encode(['success' => false, 'message' => 'Name is required']);
             exit();
