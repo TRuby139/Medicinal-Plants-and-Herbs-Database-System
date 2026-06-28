@@ -58,21 +58,56 @@ function processTags($conn, $plant_id, $family_str, $uses_str, $compounds_str) {
         }
     }
 }
+
 function handleImageUpload($fileArr) {
-    if (!isset($fileArr) || $fileArr['error'] !== UPLOAD_ERR_OK) return null;
-    $allowed_types = ['image/jpeg', 'image/png', 'image/webp'];
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    $mime = finfo_file($finfo, $fileArr['tmp_name']);
-    finfo_close($finfo);
-    if (!in_array($mime, $allowed_types)) return null;
+    global $upload_debug;
+    $upload_debug = [];
+    
+    if (!isset($fileArr) || $fileArr['error'] !== UPLOAD_ERR_OK) {
+        $upload_debug['fail'] = 'error_check';
+        $upload_debug['error_val'] = $fileArr['error'] ?? 'not set';
+        return null;
+    }
+    $upload_debug['step1'] = 'error_check passed';
+    
+    $image_info = getimagesize($fileArr['tmp_name']);
+    if ($image_info === false) {
+        $upload_debug['fail'] = 'getimagesize';
+        $upload_debug['tmp_name'] = $fileArr['tmp_name'];
+        $upload_debug['tmp_exists'] = file_exists($fileArr['tmp_name']);
+        return null;
+    }
+    $upload_debug['step2'] = 'getimagesize passed, type=' . $image_info[2];
+    
+    // If getimagesize() succeeded, the file is a valid image — accept all common formats
+    // Type IDs: 1=GIF, 2=JPEG, 3=PNG, 6=BMP, 15=WBMP, 16=XBM, 17=ICO, 18=WEBP, 19=AVIF
+    $allowed_types = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP, IMAGETYPE_GIF, IMAGETYPE_BMP, IMAGETYPE_AVIF];
+    if (!in_array($image_info[2], $allowed_types)) {
+        $upload_debug['fail'] = 'type_check';
+        $upload_debug['detected_type'] = $image_info[2];
+        return null;
+    }
+    $upload_debug['step3'] = 'type_check passed';
     
     $upload_dir = '../assets/images/plants/';
-    if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+    if (!is_dir($upload_dir)) {
+        $made = mkdir($upload_dir, 0755, true);
+        $upload_debug['mkdir'] = $made;
+    }
+    $upload_debug['dir_exists'] = is_dir($upload_dir);
+    $upload_debug['dir_writable'] = is_writable($upload_dir);
+    $upload_debug['dir_realpath'] = realpath($upload_dir);
+    
     $file_name = time() . '_' . preg_replace("/[^a-zA-Z0-9.-]/", "_", basename($fileArr['name']));
     $target_file = $upload_dir . $file_name;
+    $upload_debug['target_file'] = $target_file;
+    
     if (move_uploaded_file($fileArr['tmp_name'], $target_file)) {
+        $upload_debug['step4'] = 'move succeeded';
         return 'assets/images/plants/' . $file_name;
     }
+    $upload_debug['fail'] = 'move_uploaded_file';
+    $upload_debug['php_last_error'] = error_get_last();
     return null;
 }
 
@@ -175,6 +210,20 @@ if ($method === 'POST') {
         }
 
         $image_path = handleImageUpload($_FILES['plant-image'] ?? $_FILES['image'] ?? null);
+        
+        // Temporary debug — will remove after fixing
+        global $upload_debug;
+        $debug_info = [
+            'files_keys' => array_keys($_FILES),
+            'has_plant_image' => isset($_FILES['plant-image']),
+            'image_path_result' => $image_path,
+            'upload_steps' => $upload_debug
+        ];
+        if (isset($_FILES['plant-image'])) {
+            $debug_info['file_error'] = $_FILES['plant-image']['error'];
+            $debug_info['file_size'] = $_FILES['plant-image']['size'];
+            $debug_info['file_name'] = $_FILES['plant-image']['name'];
+        }
 
         if ($action === 'add_plant') {
             $stmt = mysqli_prepare($conn, "INSERT INTO plants (common_name, botanical_name, habitat, description, preparation_methods, dosages, precautions, image_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -182,7 +231,7 @@ if ($method === 'POST') {
             if (mysqli_stmt_execute($stmt)) {
                 $plant_id = mysqli_insert_id($conn);
                 processTags($conn, $plant_id, $family, $uses, $compounds);
-                echo json_encode(['success' => true, 'message' => 'Plant added']);
+                echo json_encode(['success' => true, 'message' => 'Plant added', 'debug' => $debug_info]);
             } else {
                 echo json_encode(['success' => false, 'message' => 'Failed to add plant']);
             }
@@ -197,7 +246,7 @@ if ($method === 'POST') {
             }
             if (mysqli_stmt_execute($stmt)) {
                 processTags($conn, $id, $family, $uses, $compounds);
-                echo json_encode(['success' => true, 'message' => 'Plant updated']);
+                echo json_encode(['success' => true, 'message' => 'Plant updated', 'debug' => $debug_info]);
             } else {
                 echo json_encode(['success' => false, 'message' => 'Failed to update plant']);
             }

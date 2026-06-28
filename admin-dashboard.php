@@ -234,7 +234,7 @@ if (!isset($_SESSION['admin_id'])) {
                             <input type="file" id="plant-image" name="plant-image" accept="image/*">
                             <div class="upload-text">
                                 <p>Drag and drop an image here or click to select</p>
-                                <p style="font-size: 0.85rem; color: var(--color-text-light);">(Max size: 2MB)</p>
+                                <p style="font-size: 0.85rem; color: var(--color-text-light);">(Max size: 10MB)</p>
                             </div>
                             <img class="image-preview" src="" alt="Preview" style="display: none; max-width: 100%; max-height: 200px; margin-top: 10px; border-radius: 4px;">
                         </div>

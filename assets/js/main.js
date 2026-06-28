@@ -566,8 +566,8 @@ function submitPlantForm(e) {
             plantImageErr.innerText = 'Please upload a valid image file.';
             plantImageErr.style.display = 'block';
             isValid = false;
-        } else if (file.size > 2 * 1024 * 1024) { // 2MB
-            plantImageErr.innerText = 'Image size must be less than 2MB.';
+        } else if (file.size > 10 * 1024 * 1024) { // 10MB
+            plantImageErr.innerText = 'Image size must be less than 10MB.';
             plantImageErr.style.display = 'block';
             isValid = false;
         } else {
@@ -585,6 +585,7 @@ function submitPlantForm(e) {
         fetch('api/plants.php', { method: 'POST', body: formData })
             .then(res => res.json())
             .then(data => {
+                console.log('Save response:', JSON.stringify(data, null, 2));
                 if(data.success) {
                     showToast('Plant saved successfully!');
                     const modal = document.getElementById('add-plant-modal');
