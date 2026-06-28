@@ -7,35 +7,48 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // If we are on the public catalogue page
     if (document.getElementById('plant-grid-container')) {
-        fetchPlants();
+        fetchTags();
+        fetchPlants(1);
         
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
             searchInput.addEventListener('keyup', (e) => {
-                if (e.key === 'Enter') {
-                    fetchPlants(e.target.value);
-                }
+                if (e.key === 'Enter') fetchPlants(1);
             });
             const searchBtn = searchInput.nextElementSibling;
             if (searchBtn && searchBtn.tagName === 'BUTTON') {
-                searchBtn.addEventListener('click', () => {
-                    fetchPlants(searchInput.value);
-                });
+                searchBtn.addEventListener('click', () => fetchPlants(1));
             }
         }
     }
 });
 
-function fetchPlants(search = '') {
+let currentPage = 1;
+
+function getCheckedValues(containerId) {
+    const checkboxes = document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`);
+    return Array.from(checkboxes).map(cb => cb.value);
+}
+
+function fetchPlants(page = 1) {
+    currentPage = page;
     const container = document.getElementById('plant-grid-container');
     if (!container) return;
     
     container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><p>Loading catalogue...</p></div>';
     
-    let url = 'api/plants.php?action=get_plants';
-    if (search) {
-        url += '&search=' + encodeURIComponent(search);
-    }
+    let url = `api/plants.php?action=get_plants&page=${page}&limit=6`;
+    const search = document.getElementById('searchInput')?.value || '';
+    if (search) url += '&search=' + encodeURIComponent(search);
+    
+    // Get tags
+    const families = getCheckedValues('filter-family-list');
+    const uses = getCheckedValues('filter-uses-list');
+    const compounds = getCheckedValues('filter-compounds-list');
+    
+    const categories = [...families, ...uses];
+    categories.forEach(c => url += `&category_id[]=${c}`);
+    compounds.forEach(c => url += `&compound_id[]=${c}`);
     
     fetch(url)
         .then(res => res.json())
@@ -43,14 +56,14 @@ function fetchPlants(search = '') {
             if (data.success) {
                 container.innerHTML = '';
                 if (data.data.length === 0) {
-                    container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><p>No plants found.</p></div>';
+                    container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><p>No plants found matching your criteria.</p></div>';
+                    renderPagination(0, 1);
                     return;
                 }
                 
                 data.data.forEach(plant => {
                     const card = document.createElement('div');
                     card.className = 'plant-card';
-                    
                     const imgPath = plant.image_path ? plant.image_path : 'assets/images/Not_uploaded.png';
                     
                     card.innerHTML = `
@@ -65,6 +78,7 @@ function fetchPlants(search = '') {
                     `;
                     container.appendChild(card);
                 });
+                renderPagination(data.total_pages, data.current_page);
             } else {
                 container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><p>Error loading catalogue.</p></div>';
             }
@@ -72,6 +86,56 @@ function fetchPlants(search = '') {
         .catch(err => {
             container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><p>Error loading catalogue.</p></div>';
         });
+}
+
+function renderPagination(totalPages, currentPage) {
+    const container = document.getElementById('pagination-container');
+    if (!container) return;
+    
+    if (totalPages <= 1) {
+        container.style.display = 'none';
+        return;
+    }
+    
+    container.style.display = 'flex';
+    container.innerHTML = '';
+    
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+        btn.textContent = i;
+        btn.onclick = () => fetchPlants(i);
+        container.appendChild(btn);
+    }
+}
+
+function fetchTags() {
+    // Fetch families
+    fetch('api/tags.php?action=get_categories&type=family')
+        .then(res => res.json())
+        .then(data => populateFilterList('filter-family-list', data.data, 'category_id'));
+        
+    // Fetch uses
+    fetch('api/tags.php?action=get_categories&type=medicinal_use')
+        .then(res => res.json())
+        .then(data => populateFilterList('filter-uses-list', data.data, 'category_id'));
+        
+    // Fetch compounds
+    fetch('api/tags.php?action=get_compounds')
+        .then(res => res.json())
+        .then(data => populateFilterList('filter-compounds-list', data.data, 'compound_id'));
+}
+
+function populateFilterList(containerId, items, nameAttr) {
+    const list = document.getElementById(containerId);
+    if (!list) return;
+    list.innerHTML = '';
+    
+    items.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `<label><input type="checkbox" value="${item.id}" name="${nameAttr}[]" onchange="fetchPlants(1)"> ${item.name}</label>`;
+        list.appendChild(li);
+    });
 }
 
 /**
@@ -167,8 +231,117 @@ document.addEventListener('DOMContentLoaded', () => {
     initLoginForm();
     initModals();
     initImageUploadPreview();
-    initPlantForm();
+    
+    // Admin dashboard specific loads
+    if (document.getElementById('admin-plants-tbody')) {
+        loadAdminPlants();
+        loadAdminCategories();
+        loadAdminCompounds();
+    }
 });
+
+function loadAdminPlants() {
+    const tbody = document.getElementById('admin-plants-tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Loading...</td></tr>';
+    
+    // For admin, let's load a large limit for now, or implement basic admin pagination
+    fetch('api/plants.php?action=get_plants&limit=100')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                tbody.innerHTML = '';
+                if (data.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No plants found</td></tr>';
+                    return;
+                }
+                data.data.forEach(plant => {
+                    const status = 'Published'; // Hardcoded visual for now
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${plant.id}</td>
+                        <td>${plant.common_name}</td>
+                        <td>${plant.botanical_name}</td>
+                        <td>${plant.family || 'N/A'}</td>
+                        <td>${status}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon edit" title="Edit" onclick="editPlant(${plant.id})">✏️</button>
+                                <button class="btn-icon delete" title="Delete" onclick="deletePlant(${plant.id})">🗑️</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Error loading plants</td></tr>';
+            }
+        });
+}
+
+function loadAdminCategories() {
+    const tbody = document.getElementById('admin-categories-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Loading...</td></tr>';
+    
+    fetch('api/tags.php?action=get_categories&type=family')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                tbody.innerHTML = '';
+                if (data.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No categories found</td></tr>';
+                    return;
+                }
+                data.data.forEach(cat => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${cat.id}</td>
+                        <td>${cat.name}</td>
+                        <td>${cat.type}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon delete" title="Delete" onclick="deleteCategory(${cat.id})">🗑️</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        });
+}
+
+function loadAdminCompounds() {
+    const tbody = document.getElementById('admin-compounds-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Loading...</td></tr>';
+    
+    fetch('api/tags.php?action=get_compounds')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                tbody.innerHTML = '';
+                if (data.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">No compounds found</td></tr>';
+                    return;
+                }
+                data.data.forEach(comp => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${comp.id}</td>
+                        <td>${comp.name}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon delete" title="Delete" onclick="deleteCompound(${comp.id})">🗑️</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        });
+}
 
 /**
  * Tab functionality for admin dashboard
@@ -199,6 +372,108 @@ function switchTab(tabId) {
     }
 }
 
+function editPlant(id) {
+    const formData = new FormData();
+    formData.append('action', 'get_plant');
+    formData.append('id', id);
+    
+    fetch('api/plants.php', { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const plant = data.data;
+                const form = document.getElementById('plant-form');
+                form.reset();
+                
+                document.getElementById('plant-id').value = plant.id;
+                document.getElementById('common-name').value = plant.common_name;
+                document.getElementById('botanical-name').value = plant.botanical_name;
+                document.getElementById('family').value = plant.family || '';
+                document.getElementById('uses').value = plant.uses || '';
+                document.getElementById('compounds').value = plant.compounds || '';
+                document.getElementById('habitat').value = plant.habitat || '';
+                document.getElementById('description').value = plant.description || '';
+                document.getElementById('preparation').value = plant.preparation_methods || '';
+                document.getElementById('precautions').value = plant.precautions || '';
+                
+                const previewImg = document.querySelector('.image-preview');
+                const uploadText = document.querySelector('.upload-text');
+                if (plant.image_path) {
+                    if (previewImg) {
+                        previewImg.src = plant.image_path;
+                        previewImg.style.display = 'block';
+                    }
+                    if (uploadText) uploadText.style.display = 'none';
+                } else {
+                    if (previewImg) previewImg.style.display = 'none';
+                    if (uploadText) uploadText.style.display = 'block';
+                }
+                
+                const targetModal = document.getElementById('add-plant-modal');
+                if (targetModal) {
+                    targetModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            } else {
+                showToast('Failed to load plant data.', 'error');
+            }
+        });
+}
+
+function deletePlant(id) {
+    if (confirm('Are you sure you want to delete this plant?')) {
+        const formData = new FormData();
+        formData.append('action', 'delete_plant');
+        formData.append('id', id);
+        fetch('api/plants.php', { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Plant deleted successfully');
+                    loadAdminPlants();
+                } else {
+                    showToast(data.message || 'Error deleting plant', 'error');
+                }
+            });
+    }
+}
+
+function deleteCategory(id) {
+    if (confirm('Are you sure you want to delete this category?')) {
+        const formData = new FormData();
+        formData.append('action', 'delete_category');
+        formData.append('id', id);
+        fetch('api/tags.php', { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Deleted successfully');
+                    loadAdminCategories();
+                } else {
+                    showToast('Error deleting', 'error');
+                }
+            });
+    }
+}
+
+function deleteCompound(id) {
+    if (confirm('Are you sure you want to delete this compound?')) {
+        const formData = new FormData();
+        formData.append('action', 'delete_compound');
+        formData.append('id', id);
+        fetch('api/tags.php', { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Deleted successfully');
+                    loadAdminCompounds();
+                } else {
+                    showToast('Error deleting', 'error');
+                }
+            });
+    }
+}
+
 /**
  * Validates and submits the Plant form
  */
@@ -206,6 +481,8 @@ function submitPlantForm(e) {
     e.preventDefault();
     let isValid = true;
 
+    const form = document.getElementById('plant-form');
+    
     // Common Name Validation
     const commonName = document.getElementById('common-name');
     const commonNameErr = document.getElementById('common-name-error');
@@ -249,17 +526,31 @@ function submitPlantForm(e) {
     }
 
     if (isValid) {
-        showToast('Plant saved successfully!');
-        const modal = document.getElementById('add-plant-modal');
-        if (modal) {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        document.getElementById('plant-form').reset();
-        const preview = document.querySelector('.image-preview');
-        const uploadText = document.querySelector('.upload-text');
-        if (preview) preview.style.display = 'none';
-        if (uploadText) uploadText.style.display = 'block';
+        const formData = new FormData(form);
+        const pid = document.getElementById('plant-id').value;
+        formData.append('action', pid === '0' || pid === '' ? 'add_plant' : 'edit_plant');
+        
+        fetch('api/plants.php', { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    showToast('Plant saved successfully!');
+                    const modal = document.getElementById('add-plant-modal');
+                    if (modal) {
+                        modal.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                    form.reset();
+                    document.getElementById('plant-id').value = '0';
+                    const preview = document.querySelector('.image-preview');
+                    const uploadText = document.querySelector('.upload-text');
+                    if (preview) preview.style.display = 'none';
+                    if (uploadText) uploadText.style.display = 'block';
+                    loadAdminPlants();
+                } else {
+                    showToast(data.message || 'Error saving plant', 'error');
+                }
+            });
     }
 }
 
@@ -272,13 +563,28 @@ function submitCategoryForm(e) {
         errorMsg.style.display = 'block';
     } else {
         errorMsg.style.display = 'none';
-        showToast('Category saved successfully!');
-        const modal = document.getElementById('add-category-modal');
-        if (modal) {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        document.getElementById('add-category-form').reset();
+        
+        const formData = new FormData();
+        formData.append('action', 'add_category');
+        formData.append('name', nameInput.value.trim());
+        formData.append('type', 'family');
+        
+        fetch('api/tags.php', { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Category saved successfully!');
+                    const modal = document.getElementById('add-category-modal');
+                    if (modal) {
+                        modal.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                    document.getElementById('add-category-form').reset();
+                    loadAdminCategories();
+                } else {
+                    showToast(data.message, 'error');
+                }
+            });
     }
 }
 
@@ -291,15 +597,30 @@ function submitCompoundForm(e) {
         errorMsg.style.display = 'block';
     } else {
         errorMsg.style.display = 'none';
-        showToast('Compound saved successfully!');
-        const modal = document.getElementById('add-compound-modal');
-        if (modal) {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        document.getElementById('add-compound-form').reset();
+        
+        const formData = new FormData();
+        formData.append('action', 'add_compound');
+        formData.append('name', nameInput.value.trim());
+        
+        fetch('api/tags.php', { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Compound saved successfully!');
+                    const modal = document.getElementById('add-compound-modal');
+                    if (modal) {
+                        modal.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                    document.getElementById('add-compound-form').reset();
+                    loadAdminCompounds();
+                } else {
+                    showToast(data.message, 'error');
+                }
+            });
     }
 }
+
 /**
  * Initialize login form validation
  */
@@ -323,20 +644,13 @@ function initLoginForm() {
         
         if (hasError) {
             e.preventDefault();
-            // Trigger shake animation
             const loginCard = loginForm.closest('.login-card') || loginForm;
             loginCard.classList.remove('shake');
-            void loginCard.offsetWidth; // trigger reflow
+            void loginCard.offsetWidth;
             loginCard.classList.add('shake');
-        } else {
-            // TODO: Remove preventDefault when connecting to PHP
-            e.preventDefault();
-            // Proceed with login (simulate success for frontend phase)
-            window.location.href = 'admin-dashboard.html';
         }
     });
 
-    // Remove error on input
     const inputs = loginForm.querySelectorAll('input');
     inputs.forEach(input => {
         input.addEventListener('input', function() {
@@ -360,45 +674,21 @@ function initModals() {
         trigger.addEventListener('click', (e) => {
             e.preventDefault();
             const targetId = trigger.getAttribute('data-modal-target');
-            const targetModal = document.getElementById(targetId);
-            if (targetModal) {
-                targetModal.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent background scrolling
-                
-                if (trigger.classList.contains('edit')) {
-                    const row = trigger.closest('tr');
-                    if (row) {
-                        const cells = row.querySelectorAll('td');
-                        if (cells.length >= 5) {
-                            const commonName = cells[1].textContent.trim();
-                            const botanicalName = cells[2].textContent.trim();
-                            const family = cells[3].textContent.trim();
-                            const status = cells[4].textContent.trim().toLowerCase();
-                            
-                            const form = document.getElementById('plant-form');
-                            if (form) {
-                                const cnInput = form.querySelector('#common-name');
-                                const bnInput = form.querySelector('#botanical-name');
-                                const fInput = form.querySelector('#family');
-                                const sInput = form.querySelector('#status');
-                                
-                                if (cnInput) cnInput.value = commonName;
-                                if (bnInput) bnInput.value = botanicalName;
-                                if (fInput) fInput.value = family;
-                                if (sInput) {
-                                    for (let i = 0; i < sInput.options.length; i++) {
-                                        if (sInput.options[i].value === status) {
-                                            sInput.selectedIndex = i;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
+            // Allow JS functions to handle edit, only handle simple opens here
+            if (!trigger.classList.contains('edit')) {
+                const targetModal = document.getElementById(targetId);
+                if (targetModal) {
+                    if (targetId === 'add-plant-modal') {
+                        const form = document.getElementById('plant-form');
+                        if (form) form.reset();
+                        document.getElementById('plant-id').value = '0';
+                        const preview = document.querySelector('.image-preview');
+                        const uploadText = document.querySelector('.upload-text');
+                        if (preview) preview.style.display = 'none';
+                        if (uploadText) uploadText.style.display = 'block';
                     }
-                } else if (targetId === 'add-plant-modal') {
-                    const form = document.getElementById('plant-form');
-                    if (form) form.reset();
+                    targetModal.classList.add('active');
+                    document.body.style.overflow = 'hidden'; 
                 }
             }
         });
@@ -414,7 +704,6 @@ function initModals() {
         });
     });
 
-    // Close on click outside modal content
     modals.forEach(modal => {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {

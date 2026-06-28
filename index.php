@@ -44,10 +44,8 @@
                     
                     <details class="filter-group" open>
                         <summary>Plant Family</summary>
-                        <ul class="filter-list">
-                            <li><label><input type="checkbox"> Lamiaceae</label></li>
-                            <li><label><input type="checkbox"> Asteraceae</label></li>
-                            <li><label><input type="checkbox"> Zingiberaceae</label></li>
+                        <ul class="filter-list" id="filter-family-list">
+                            <li><small>Loading...</small></li>
                         </ul>
                     </details>
                     
@@ -55,11 +53,8 @@
                     
                     <details class="filter-group" open>
                         <summary>Medicinal Use</summary>
-                        <ul class="filter-list">
-                            <li><label><input type="checkbox"> Digestive</label></li>
-                            <li><label><input type="checkbox"> Anti-inflammatory</label></li>
-                            <li><label><input type="checkbox"> Respiratory</label></li>
-                            <li><label><input type="checkbox"> Sedative</label></li>
+                        <ul class="filter-list" id="filter-uses-list">
+                            <li><small>Loading...</small></li>
                         </ul>
                     </details>
 
@@ -67,10 +62,8 @@
                     
                     <details class="filter-group" open>
                         <summary>Compounds</summary>
-                        <ul class="filter-list">
-                            <li><label><input type="checkbox"> Menthol</label></li>
-                            <li><label><input type="checkbox"> Curcumin</label></li>
-                            <li><label><input type="checkbox"> Rosmarinic Acid</label></li>
+                        <ul class="filter-list" id="filter-compounds-list">
+                            <li><small>Loading...</small></li>
                         </ul>
                     </details>
                 </aside>

@@ -68,47 +68,8 @@ if (!isset($_SESSION['admin_id'])) {
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Aloe Vera</td>
-                        <td>Aloe barbadensis miller</td>
-                        <td>Asphodelaceae</td>
-                        <td>Published</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-icon edit" title="Edit" data-modal-target="add-plant-modal">✏️</button>
-                                <button class="btn-icon delete" title="Delete">🗑️</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Lavender</td>
-                        <td>Lavandula angustifolia</td>
-                        <td>Lamiaceae</td>
-                        <td>Published</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-icon edit" title="Edit" data-modal-target="add-plant-modal">✏️</button>
-                                <button class="btn-icon delete" title="Delete">🗑️</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Echinacea</td>
-                        <td>Echinacea purpurea</td>
-                        <td>Asteraceae</td>
-                        <td>Draft</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-icon edit" title="Edit" data-modal-target="add-plant-modal">✏️</button>
-                                <button class="btn-icon delete" title="Delete">🗑️</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <!-- More mock rows can go here -->
+                <tbody id="admin-plants-tbody">
+                    <!-- Loaded dynamically -->
                 </tbody>
             </table>
         </div> <!-- End of plants-tab -->
@@ -128,17 +89,8 @@ if (!isset($_SESSION['admin_id'])) {
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Asphodelaceae</td>
-                            <td>Family of flowering plants including Aloe Vera.</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-icon delete" title="Delete">🗑️</button>
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="admin-categories-tbody">
+                        <!-- Loaded dynamically -->
                     </tbody>
                 </table>
             </div>
@@ -158,16 +110,8 @@ if (!isset($_SESSION['admin_id'])) {
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Aloin</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-icon delete" title="Delete">🗑️</button>
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="admin-compounds-tbody">
+                        <!-- Loaded dynamically -->
                     </tbody>
                 </table>
             </div>
@@ -234,6 +178,7 @@ if (!isset($_SESSION['admin_id'])) {
                     <div class="grid grid-cols-2 gap-4">
                         <div class="form-group">
                             <label for="common-name">Common Name <span style="color: red;">*</span></label>
+                            <input type="hidden" id="plant-id" name="id" value="0">
                             <input type="text" id="common-name" name="common-name" required>
                             <span class="error-msg" id="common-name-error" style="color: red; font-size: 0.85rem; display: none;"></span>
                         </div>
