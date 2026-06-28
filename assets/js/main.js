@@ -20,6 +20,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 searchBtn.addEventListener('click', () => fetchPlants(1));
             }
         }
+
+        const clearBtn = document.getElementById('clear-filters-btn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                document.querySelectorAll('.sidebar input[type="checkbox"]').forEach(cb => cb.checked = false);
+                if (searchInput) searchInput.value = '';
+                fetchPlants(1);
+            });
+        }
+    }
+    
+    // If we are on the admin dashboard
+    const adminSearchInput = document.getElementById('admin-search-input');
+    if (adminSearchInput) {
+        adminSearchInput.addEventListener('input', () => {
+            // Live search as they type
+            loadAdminPlants();
+        });
+        const adminSearchBtn = document.getElementById('admin-search-btn');
+        if (adminSearchBtn) {
+            adminSearchBtn.addEventListener('click', () => loadAdminPlants());
+        }
     }
 });
 
@@ -244,27 +266,29 @@ function loadAdminPlants() {
     const tbody = document.getElementById('admin-plants-tbody');
     if (!tbody) return;
     
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Loading...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Loading...</td></tr>';
     
-    // For admin, let's load a large limit for now, or implement basic admin pagination
-    fetch('api/plants.php?action=get_plants&limit=100')
+    const searchInput = document.getElementById('admin-search-input');
+    const searchVal = searchInput ? encodeURIComponent(searchInput.value) : '';
+    let url = `api/plants.php?action=get_plants&limit=100`;
+    if (searchVal) url += `&search=${searchVal}`;
+    
+    fetch(url)
         .then(res => res.json())
         .then(data => {
             if (data.success) {
                 tbody.innerHTML = '';
                 if (data.data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No plants found</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No plants found</td></tr>';
                     return;
                 }
                 data.data.forEach(plant => {
-                    const status = 'Published'; // Hardcoded visual for now
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${plant.id}</td>
                         <td>${plant.common_name}</td>
                         <td>${plant.botanical_name}</td>
                         <td>${plant.family || 'N/A'}</td>
-                        <td>${status}</td>
                         <td>
                             <div class="action-buttons">
                                 <button class="btn-icon edit" title="Edit" onclick="editPlant(${plant.id})">✏️</button>
@@ -275,7 +299,7 @@ function loadAdminPlants() {
                     tbody.appendChild(tr);
                 });
             } else {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Error loading plants</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Error loading plants</td></tr>';
             }
         });
 }

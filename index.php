@@ -43,7 +43,7 @@
                     <h3>Filters</h3>
                     
                     <details class="filter-group">
-                        <summary class="btn btn-primary" style="width: 100%; text-align: left; border-radius: 4px; box-sizing: border-box; margin-bottom: 0;">Plant Family</summary>
+                        <summary class="btn btn-outline" style="width: 100%; text-align: left; border-radius: 4px; box-sizing: border-box; margin-bottom: 0;">Plant Family</summary>
                         <ul class="filter-list" id="filter-family-list" style="margin-top: 10px;">
                             <li><small>Loading...</small></li>
                         </ul>
@@ -57,11 +57,13 @@
                     </details>
 
                     <details class="filter-group">
-                        <summary class="btn btn-primary" style="width: 100%; text-align: left; border-radius: 4px; box-sizing: border-box; margin-bottom: 0;">Compounds</summary>
+                        <summary class="btn btn-outline" style="width: 100%; text-align: left; border-radius: 4px; box-sizing: border-box; margin-bottom: 0;">Compounds</summary>
                         <ul class="filter-list" id="filter-compounds-list" style="margin-top: 10px;">
                             <li><small>Loading...</small></li>
                         </ul>
                     </details>
+
+                    <button class="btn btn-primary btn-full" id="clear-filters-btn" style="margin-top: 10px;">Clear Filters</button>
                 </aside>
 
                 <div class="main-content">

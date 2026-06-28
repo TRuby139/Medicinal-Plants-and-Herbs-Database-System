@@ -47,13 +47,8 @@ if (!isset($_SESSION['admin_id'])) {
             </div>
 
         <div class="admin-toolbar flex gap-4" style="margin-bottom: 20px; flex-wrap: wrap;">
-            <input type="text" placeholder="Search inventory..." style="flex: 1; min-width: 200px; padding: 10px; border-radius: var(--radius); border: 1px solid var(--color-divider);">
-            <select style="width: auto; padding: 10px; border-radius: var(--radius); border: 1px solid var(--color-divider);">
-                <option value="">All Statuses</option>
-                <option value="published">Published</option>
-                <option value="draft">Draft</option>
-            </select>
-            <button class="btn btn-outline">Filter</button>
+            <input type="text" placeholder="Search inventory..." id="admin-search-input" style="flex: 1; min-width: 200px; padding: 10px; border-radius: var(--radius); border: 1px solid var(--color-divider);">
+            <button class="btn btn-outline" id="admin-search-btn">Search</button>
         </div>
 
         <div class="table-container">
@@ -64,7 +59,6 @@ if (!isset($_SESSION['admin_id'])) {
                         <th>Common Name</th>
                         <th>Botanical Name</th>
                         <th>Family</th>
-                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -72,6 +66,7 @@ if (!isset($_SESSION['admin_id'])) {
                     <!-- Loaded dynamically -->
                 </tbody>
             </table>
+        </div>
         </div> <!-- End of plants-tab -->
 
         <div id="categories-tab" class="tab-content" style="display: none;">
