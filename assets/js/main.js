@@ -644,6 +644,7 @@ function initLoginForm() {
         
         if (hasError) {
             e.preventDefault();
+            e.stopImmediatePropagation();
             const loginCard = loginForm.closest('.login-card') || loginForm;
             loginCard.classList.remove('shake');
             void loginCard.offsetWidth;

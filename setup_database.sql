@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS admins (
 
 -- Default admin user (password: admin123)
 -- The password hash was generated using password_hash('admin123', PASSWORD_DEFAULT)
-INSERT IGNORE INTO admins (username, password_hash) VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+INSERT IGNORE INTO admins (username, password_hash) VALUES ('admin', '$2y$10$UZIK0LdYgbgyMBFflFqroOmo19hMQFV7vfyhgNmqRKE5LPYr1TcrK');
 
 -- Plants Table
 CREATE TABLE IF NOT EXISTS plants (
