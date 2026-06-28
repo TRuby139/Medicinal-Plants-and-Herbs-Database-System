@@ -197,7 +197,7 @@ if (!isset($_SESSION['admin_id'])) {
                         <input type="text" id="uses" name="uses">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-4" style="align-items: flex-end;">
                         <div class="form-group">
                             <label for="habitat">Habitat/Origin</label>
                             <input type="text" id="habitat" name="habitat">
