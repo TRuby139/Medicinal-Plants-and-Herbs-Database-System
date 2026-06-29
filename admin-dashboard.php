@@ -36,7 +36,8 @@ if (!isset($_SESSION['admin_id'])) {
     <main class="container" style="padding: 40px 20px;">
         <div class="admin-tabs" style="display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid var(--color-divider); padding-bottom: 10px;">
             <button class="tab-btn active" onclick="switchTab('plants')" style="background: none; border: none; font-size: 1.1rem; padding: 10px 20px; cursor: pointer; border-bottom: 3px solid var(--color-primary); font-weight: bold;">Plant Inventory</button>
-            <button class="tab-btn" onclick="switchTab('categories')" style="background: none; border: none; font-size: 1.1rem; padding: 10px 20px; cursor: pointer; border-bottom: 3px solid transparent;">Categories</button>
+            <button class="tab-btn" onclick="switchTab('categories')" style="background: none; border: none; font-size: 1.1rem; padding: 10px 20px; cursor: pointer; border-bottom: 3px solid transparent;">Plant Families</button>
+            <button class="tab-btn" onclick="switchTab('uses')" style="background: none; border: none; font-size: 1.1rem; padding: 10px 20px; cursor: pointer; border-bottom: 3px solid transparent;">Medicinal Uses</button>
             <button class="tab-btn" onclick="switchTab('compounds')" style="background: none; border: none; font-size: 1.1rem; padding: 10px 20px; cursor: pointer; border-bottom: 3px solid transparent;">Compounds</button>
         </div>
 
@@ -71,8 +72,8 @@ if (!isset($_SESSION['admin_id'])) {
 
         <div id="categories-tab" class="tab-content" style="display: none;">
             <div class="admin-header flex justify-between items-center" style="margin-bottom: 20px;">
-                <h2>Categories (Families)</h2>
-                <button class="btn btn-primary" data-modal-target="add-category-modal">Add New Category</button>
+                <h2>Plant Families</h2>
+                <button class="btn btn-primary" data-modal-target="add-category-modal">Add Plant Family</button>
             </div>
             <div class="table-container">
                 <table class="admin-table">
@@ -90,6 +91,28 @@ if (!isset($_SESSION['admin_id'])) {
                 </table>
             </div>
         </div> <!-- End of categories-tab -->
+
+        <div id="uses-tab" class="tab-content" style="display: none;">
+            <div class="admin-header flex justify-between items-center" style="margin-bottom: 20px;">
+                <h2>Medicinal Uses</h2>
+                <button class="btn btn-primary" data-modal-target="add-use-modal">Add Medicinal Use</button>
+            </div>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Medicinal Use Name</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-uses-tbody">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div> <!-- End of uses-tab -->
 
         <div id="compounds-tab" class="tab-content" style="display: none;">
             <div class="admin-header flex justify-between items-center" style="margin-bottom: 20px;">
@@ -113,11 +136,11 @@ if (!isset($_SESSION['admin_id'])) {
         </div> <!-- End of compounds-tab -->
     </main>
 
-    <!-- Add Category Modal -->
+    <!-- Add Category (Plant Family) Modal -->
     <div id="add-category-modal" class="modal-overlay">
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
-                <h3>Category Details</h3>
+                <h3>Plant Family Details</h3>
                 <button class="close-btn close-modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -135,7 +158,34 @@ if (!isset($_SESSION['admin_id'])) {
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline close-modal">Cancel</button>
-                <button class="btn btn-primary" onclick="submitCategoryForm(event)">Save Category</button>
+                <button class="btn btn-primary" onclick="submitCategoryForm(event)">Save Family</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Medicinal Use Modal -->
+    <div id="add-use-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Medicinal Use Details</h3>
+                <button class="close-btn close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-use-form">
+                    <div class="form-group">
+                        <label for="use-name">Medicinal Use Name <span style="color: red;">*</span></label>
+                        <input type="text" id="use-name" name="use-name">
+                        <span class="error-msg" style="color: red; font-size: 0.85rem; display: none;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="use-desc">Description</label>
+                        <textarea id="use-desc" name="use-desc" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">Cancel</button>
+                <button class="btn btn-primary" onclick="submitUseForm(event)">Save Medicinal Use</button>
             </div>
         </div>
     </div>

@@ -294,6 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('admin-plants-tbody')) {
         loadAdminPlants();
         loadAdminCategories();
+        loadAdminUses();
         loadAdminCompounds();
     }
 });
@@ -841,4 +842,88 @@ function initImageUploadPreview() {
             }
         });
     });
+}
+
+function loadAdminUses() {
+    const tbody = document.getElementById('admin-uses-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan=""4"" style=""text-align: center;"">Loading...</td></tr>';
+    
+    fetch('api/tags.php?action=get_categories&type=medicinal_use')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                tbody.innerHTML = '';
+                if (data.data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan=""4"" style=""text-align: center;"">No medicinal uses found</td></tr>';
+                    return;
+                }
+                data.data.forEach(use => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${use.id}</td>
+                        <td>${use.name}</td>
+                        <td>${use.type}</td>
+                        <td>
+                            <div class=""action-buttons"">
+                                <button class=""btn-icon delete"" title=""Delete"" onclick=""deleteUse(${use.id})"">???</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        });
+}
+
+function deleteUse(id) {
+    if (confirm('Are you sure you want to delete this medicinal use?')) {
+        const formData = new FormData();
+        formData.append('action', 'delete_category');
+        formData.append('id', id);
+        fetch('api/tags.php', { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Deleted successfully');
+                    loadAdminUses();
+                } else {
+                    showToast('Error deleting', 'error');
+                }
+            });
+    }
+}
+
+function submitUseForm(e) {
+    e.preventDefault();
+    const nameInput = document.getElementById('use-name');
+    const errorMsg = nameInput.nextElementSibling;
+    if (nameInput.value.trim() === '') {
+        errorMsg.innerText = 'Medicinal Use name is required.';
+        errorMsg.style.display = 'block';
+    } else {
+        errorMsg.style.display = 'none';
+        
+        const formData = new FormData();
+        formData.append('action', 'add_category');
+        formData.append('name', nameInput.value.trim());
+        formData.append('type', 'medicinal_use');
+        
+        fetch('api/tags.php', { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Medicinal Use saved successfully!');
+                    const modal = document.getElementById('add-use-modal');
+                    if (modal) {
+                        modal.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                    document.getElementById('add-use-form').reset();
+                    loadAdminUses();
+                } else {
+                    showToast(data.message, 'error');
+                }
+            });
+    }
 }

@@ -43,14 +43,14 @@
                     <h3>Filters</h3>
                     
                     <details class="filter-group">
-                        <summary class="btn btn-outline" style="width: 100%; text-align: left; border-radius: 4px; box-sizing: border-box; margin-bottom: 0;">Plant Family</summary>
+                        <summary class="btn btn-outline" style="width: 100%; text-align: left; border-radius: 4px; box-sizing: border-box; margin-bottom: 0;">Plant Families</summary>
                         <ul class="filter-list" id="filter-family-list" style="margin-top: 10px;">
                             <li><small>Loading...</small></li>
                         </ul>
                     </details>
                     
                     <details class="filter-group">
-                        <summary class="btn btn-outline" style="width: 100%; text-align: left; border-radius: 4px; box-sizing: border-box; margin-bottom: 0;">Medicinal Use</summary>
+                        <summary class="btn btn-outline" style="width: 100%; text-align: left; border-radius: 4px; box-sizing: border-box; margin-bottom: 0;">Medicinal Uses</summary>
                         <ul class="filter-list" id="filter-uses-list" style="margin-top: 10px;">
                             <li><small>Loading...</small></li>
                         </ul>
@@ -69,7 +69,7 @@
                 <div class="main-content">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <h2>Plant Catalogue</h2>
-                        <select id="sortOrder" class="btn btn-outline" style="border-radius: 4px; padding: 5px 10px; border-color: #ddd; background: transparent; cursor: pointer;">
+                        <select id="sortOrder" class="sort-dropdown" style="border-radius: 4px; padding: 8px 12px; border: 1px solid var(--color-primary); background-color: #fff; color: var(--color-text); cursor: pointer; font-family: var(--font-body); font-size: 0.95rem; outline: none; transition: box-shadow 0.2s ease;">
                             <option value="alpha_asc">Alphabetical (A-Z)</option>
                             <option value="date_desc">Newest First</option>
                         </select>

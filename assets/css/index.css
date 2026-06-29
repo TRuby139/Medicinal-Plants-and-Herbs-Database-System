@@ -875,3 +875,6 @@ img {
     transform: translateY(-5px) !important;
     box-shadow: 0 10px 20px rgba(30, 57, 42, 0.15) !important;
 }
+
+.sort-dropdown:hover {
+}
