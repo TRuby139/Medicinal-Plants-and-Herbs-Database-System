@@ -26,8 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
             clearBtn.addEventListener('click', () => {
                 document.querySelectorAll('.sidebar input[type="checkbox"]').forEach(cb => cb.checked = false);
                 if (searchInput) searchInput.value = '';
+                const sortOrder = document.getElementById('sortOrder');
+                if (sortOrder) sortOrder.value = 'alpha_asc';
                 fetchPlants(1);
             });
+        }
+        
+        const sortOrder = document.getElementById('sortOrder');
+        if (sortOrder) {
+            sortOrder.addEventListener('change', () => fetchPlants(1));
         }
     }
     
@@ -88,6 +95,9 @@ function fetchPlants(page = 1) {
     let url = `api/plants.php?action=get_plants&page=${page}&limit=6`;
     const search = document.getElementById('searchInput')?.value || '';
     if (search) url += '&search=' + encodeURIComponent(search);
+    
+    const sort = document.getElementById('sortOrder')?.value || 'alpha_asc';
+    if (sort) url += '&sort=' + encodeURIComponent(sort);
     
     // Get tags
     const families = getCheckedValues('filter-family-list');
@@ -288,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function loadAdminPlants() {
+function loadAdminPlants(page = 1) {
     const tbody = document.getElementById('admin-plants-tbody');
     if (!tbody) return;
     
@@ -296,7 +306,7 @@ function loadAdminPlants() {
     
     const searchInput = document.getElementById('admin-search-input');
     const searchVal = searchInput ? encodeURIComponent(searchInput.value) : '';
-    let url = `api/plants.php?action=get_plants&limit=100`;
+    let url = `api/plants.php?action=get_plants&limit=15&page=${page}`;
     if (searchVal) url += `&search=${searchVal}`;
     
     fetch(url)
@@ -324,10 +334,39 @@ function loadAdminPlants() {
                     `;
                     tbody.appendChild(tr);
                 });
+                renderAdminPagination(data.total_pages, data.current_page);
             } else {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Error loading plants</td></tr>';
             }
         });
+}
+
+function renderAdminPagination(totalPages, currentPage) {
+    let container = document.getElementById('admin-pagination-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'admin-pagination-container';
+        container.className = 'pagination flex justify-center items-center gap-2';
+        container.style.marginTop = '20px';
+        const table = document.querySelector('.data-table');
+        if (table) table.parentNode.insertBefore(container, table.nextSibling);
+    }
+    
+    if (totalPages <= 1) {
+        container.style.display = 'none';
+        return;
+    }
+    
+    container.style.display = 'flex';
+    container.innerHTML = '';
+    
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+        btn.textContent = i;
+        btn.onclick = () => loadAdminPlants(i);
+        container.appendChild(btn);
+    }
 }
 
 function loadAdminCategories() {

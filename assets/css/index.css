@@ -848,3 +848,30 @@ img {
     color: var(--color-text-light);
     padding: 0 0.5rem;
 }
+
+/* -- NEW AESTHETIC OVERRIDES -- */
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.site-header {
+    background-color: rgba(250, 249, 246, 0.85) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.modal-content {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.plant-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.plant-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 10px 20px rgba(30, 57, 42, 0.15) !important;
+}

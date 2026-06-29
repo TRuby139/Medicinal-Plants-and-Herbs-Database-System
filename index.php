@@ -67,6 +67,13 @@
                 </aside>
 
                 <div class="main-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>Plant Catalogue</h2>
+                        <select id="sortOrder" class="btn btn-outline" style="border-radius: 4px; padding: 5px 10px; border-color: #ddd; background: transparent; cursor: pointer;">
+                            <option value="alpha_asc">Alphabetical (A-Z)</option>
+                            <option value="date_desc">Newest First</option>
+                        </select>
+                    </div>
                     <div class="plant-grid" id="plant-grid-container">
                         <!-- Plant cards will be loaded here via JavaScript fetch -->
                         <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">

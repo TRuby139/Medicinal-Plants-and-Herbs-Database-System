@@ -16,7 +16,25 @@ $plant = mysqli_fetch_assoc($result);
 if (!$plant) {
     // 404
     header("HTTP/1.0 404 Not Found");
-    echo "<h1>Plant not found</h1><a href='index.php'>Go back</a>";
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Plant Not Found - Botanica</title>
+        <link rel="stylesheet" href="assets/css/index.css">
+    </head>
+    <body class="detail-page-body flex flex-col items-center justify-center" style="min-height: 100vh; text-align: center; padding: 20px;">
+        <div class="404-container" style="background: rgba(255,255,255,0.9); padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); backdrop-filter: blur(10px); max-width: 500px; width: 100%;">
+            <h1 style="font-size: 4rem; color: var(--color-primary); margin-bottom: 10px;">404</h1>
+            <h2 style="margin-bottom: 20px;">Oops! Plant not found</h2>
+            <p style="margin-bottom: 30px; color: var(--color-text-light);">We searched our entire database, but couldn't find the botanical specimen you're looking for.</p>
+            <a href='index.php' class='btn btn-primary' style="display: inline-block;">&larr; Return to Catalogue</a>
+        </div>
+    </body>
+    </html>
+    <?php
     exit();
 }
 

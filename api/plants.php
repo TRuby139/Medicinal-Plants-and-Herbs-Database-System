@@ -68,6 +68,10 @@ function handleImageUpload($fileArr) {
         $upload_debug['error_val'] = $fileArr['error'] ?? 'not set';
         return null;
     }
+    if ($fileArr['size'] > 10485760) { // 10MB limit
+        $upload_debug['fail'] = 'size_check';
+        return null;
+    }
     $upload_debug['step1'] = 'error_check passed';
     
     $image_info = getimagesize($fileArr['tmp_name']);
@@ -148,6 +152,12 @@ if ($method === 'GET') {
             $types .= "ss";
         }
 
+        $sort = $_GET['sort'] ?? 'alpha_asc';
+        $orderBy = " ORDER BY p.common_name ASC";
+        if ($sort === 'date_desc') {
+            $orderBy = " ORDER BY p.id DESC";
+        }
+
         // Get total count for pagination
         $countQuery = "SELECT COUNT(DISTINCT p.id) as total FROM plants p " . $joins . $where;
         $countStmt = mysqli_prepare($conn, $countQuery);
@@ -157,7 +167,7 @@ if ($method === 'GET') {
         $total_pages = ceil($total_rows / $limit);
 
         // Get paginated data
-        $query = "SELECT DISTINCT p.* FROM plants p " . $joins . $where . " ORDER BY p.common_name ASC LIMIT ?, ?";
+        $query = "SELECT DISTINCT p.* FROM plants p " . $joins . $where . $orderBy . " LIMIT ?, ?";
         $params[] = $offset; $params[] = $limit;
         $types .= "ii";
         
@@ -204,12 +214,16 @@ if ($method === 'POST') {
         $uses = trim(htmlspecialchars($_POST['uses'] ?? ''));
         $compounds = trim(htmlspecialchars($_POST['compounds'] ?? ''));
 
-        if (empty($common_name) || empty($botanical_name)) {
-            echo json_encode(['success' => false, 'message' => 'Names are required.']);
+        if (strlen($common_name) < 2 || strlen($botanical_name) < 2) {
+            echo json_encode(['success' => false, 'message' => 'Common and Botanical names must be at least 2 characters.']);
             exit();
         }
 
         $image_path = handleImageUpload($_FILES['plant-image'] ?? $_FILES['image'] ?? null);
+        if (isset($_FILES['plant-image']) && $_FILES['plant-image']['error'] === UPLOAD_ERR_OK && !$image_path) {
+            echo json_encode(['success' => false, 'message' => 'Invalid image format or file exceeds 10MB limit.']);
+            exit();
+        }
         
         // Temporary debug — will remove after fixing
         global $upload_debug;
