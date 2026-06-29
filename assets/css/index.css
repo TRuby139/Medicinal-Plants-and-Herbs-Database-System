@@ -877,4 +877,5 @@ img {
 }
 
 .sort-dropdown:hover {
+    box-shadow: 0 4px 12px rgba(30, 57, 42, 0.1) !important;
 }

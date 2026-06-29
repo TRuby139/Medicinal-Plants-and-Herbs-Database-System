@@ -847,7 +847,7 @@ function initImageUploadPreview() {
 function loadAdminUses() {
     const tbody = document.getElementById('admin-uses-tbody');
     if (!tbody) return;
-    tbody.innerHTML = '<tr><td colspan=""4"" style=""text-align: center;"">Loading...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Loading...</td></tr>';
     
     fetch('api/tags.php?action=get_categories&type=medicinal_use')
         .then(res => res.json())
@@ -855,7 +855,7 @@ function loadAdminUses() {
             if (data.success) {
                 tbody.innerHTML = '';
                 if (data.data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan=""4"" style=""text-align: center;"">No medicinal uses found</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No medicinal uses found</td></tr>';
                     return;
                 }
                 data.data.forEach(use => {
@@ -865,8 +865,8 @@ function loadAdminUses() {
                         <td>${use.name}</td>
                         <td>${use.type}</td>
                         <td>
-                            <div class=""action-buttons"">
-                                <button class=""btn-icon delete"" title=""Delete"" onclick=""deleteUse(${use.id})"">???</button>
+                            <div class="action-buttons">
+                                <button class="btn-icon delete" title="Delete" onclick="deleteUse(${use.id})">🗑️</button>
                             </div>
                         </td>
                     `;
